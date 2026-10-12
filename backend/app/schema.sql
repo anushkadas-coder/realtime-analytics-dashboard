@@ -1,0 +1,40 @@
+-- Raw event log (append-only). 5M+ rows target.
+-- source: which stream the event came from ('site' = personal website tracker,
+-- 'wikipedia' = Wikimedia EventStreams, 'demo' = simulator / load tests).
+CREATE TABLE IF NOT EXISTS events (
+    id           BIGSERIAL PRIMARY KEY,
+    source       TEXT             NOT NULL DEFAULT 'demo',
+    event_type   TEXT             NOT NULL,
+    user_id      TEXT             NOT NULL,
+    value        DOUBLE PRECISION NOT NULL DEFAULT 0,
+    props        JSONB            NOT NULL DEFAULT '{}'::jsonb,
+    occurred_at  TIMESTAMPTZ      NOT NULL,
+    ingested_at  TIMESTAMPTZ      NOT NULL DEFAULT now()
+);
+
+-- BRIN: tiny index for time-range scans on an append-only, time-ordered table.
+CREATE INDEX IF NOT EXISTS events_occurred_brin ON events USING BRIN (occurred_at);
+-- Composite B-tree for "per-source, per-type over a time window" drill-downs.
+CREATE INDEX IF NOT EXISTS events_src_type_time_idx ON events (source, event_type, occurred_at DESC);
+-- Cursor-based live polling: WHERE source = ? AND id > ? ORDER BY id.
+CREATE INDEX IF NOT EXISTS events_src_id_idx ON events (source, id);
+-- Per-user lookups (user timeline, active-user checks).
+CREATE INDEX IF NOT EXISTS events_user_time_idx ON events (user_id, occurred_at DESC);
+
+-- Pre-aggregated per-minute rollup, upserted on every ingest batch.
+-- Dashboard queries read this instead of scanning raw events.
+CREATE TABLE IF NOT EXISTS event_rollup_minute (
+    bucket      TIMESTAMPTZ      NOT NULL,
+    source      TEXT             NOT NULL,
+    event_type  TEXT             NOT NULL,
+    cnt         BIGINT           NOT NULL DEFAULT 0,
+    value_sum   DOUBLE PRECISION NOT NULL DEFAULT 0,
+    PRIMARY KEY (source, bucket, event_type)
+);
+
+-- Resume position for on-demand stream pulls (Last-Event-ID).
+CREATE TABLE IF NOT EXISTS connector_state (
+    name        TEXT PRIMARY KEY,
+    last_id     TEXT,
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
