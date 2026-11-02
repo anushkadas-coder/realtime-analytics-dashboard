@@ -26,7 +26,7 @@ import aiohttp
 
 STREAM_URL = "https://stream.wikimedia.org/v2/stream/recentchange"
 # Wikimedia's User-Agent policy asks clients to identify themselves.
-USER_AGENT = "RealTimeAnalyticsDashboard/1.0 (https://uiucwangjiajun.com) aiohttp"
+USER_AGENT = "RealTimeAnalyticsDashboard/1.0 (https://github.com/anushkadas-coder/realtime-analytics-dashboard; anushkadas05das@gmail.com) aiohttp"
 log = logging.getLogger("wikipedia")
 
 

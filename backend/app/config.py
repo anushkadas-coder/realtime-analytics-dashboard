@@ -33,7 +33,7 @@ class Config:
     # /api/collect: browser beacons from the personal website.
     COLLECT_ORIGINS = [o for o in os.getenv(
         "COLLECT_ORIGINS",
-        "https://uiucwangjiajun.com,https://www.uiucwangjiajun.com,http://localhost:5173,http://localhost:8080",
+        "https://anushkadas-coder.github.io,http://localhost:5173,http://localhost:8080",
     ).split(",") if o]
     COLLECT_RATE_PER_MIN = int(os.getenv("COLLECT_RATE_PER_MIN", "120"))  # per client IP
 

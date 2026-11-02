@@ -25,7 +25,7 @@ from .ingest import ValidationError, ingest, validate
 
 log = logging.getLogger(__name__)
 LOCK_KEY = 7_770_001
-USER_AGENT = "RealTimeAnalyticsDashboard/1.0 (https://uiucwangjiajun.com) python-requests"
+USER_AGENT = "RealTimeAnalyticsDashboard/1.0 (https://github.com/anushkadas-coder/realtime-analytics-dashboard; anushkadas05das@gmail.com) python-requests"
 RESUME_WINDOW_S = 120
 
 

@@ -7,7 +7,7 @@ WebSocket with sub-100 ms latency.
 | Stream | What it is | What the dashboard answers |
 |---|---|---|
 | **Wikipedia Live** (`source=wikipedia`) | Every edit, page creation, log action and category change across all Wikimedia projects, from the public [EventStreams](https://stream.wikimedia.org/v2/ui/) `recentchange` feed. ~30 events/s, **~2.5M events/day**. | How much is changing right now? Which wikis are most active? What share of changes are made by bots? Who is editing? |
-| Website tracker (`source=site`, API only, not shown on the dashboard) | First-party tracker (`tracker/rta.js`) on [uiucwangjiajun.com](https://uiucwangjiajun.com). | How many people are on my site right now? How many come from my LinkedIn posts (vs GitHub, Google, Handshake…)? Which pages do they read, and do they click through to GitHub or my resume? |
+| Website tracker (`source=site`, API only, not shown on the dashboard) | First-party tracker (`tracker/rta.js`) on [anushkadas-coder.github.io](https://anushkadas-coder.github.io). | How many people are on my site right now? How many come from my LinkedIn posts (vs GitHub, Google, Handshake…)? Which pages do they read, and do they click through to GitHub or my resume? |
 | Simulator (`source=demo`, API only, not shown on the dashboard) | Synthetic traffic from `scripts/simulate.py`. | Load and latency benchmarks. |
 
 **Stack:** Python · Flask · gevent/gunicorn · flask-sock (WebSocket) · Redis (pub/sub, HyperLogLog,
@@ -16,7 +16,7 @@ counters) · PostgreSQL · React + Vite + Recharts · Docker · Kubernetes (HPA,
 ```mermaid
 flowchart LR
   WM[Wikimedia EventStreams<br/>SSE, ~30 ev/s] --> CONN[wikipedia connector<br/>Last-Event-ID resume, batching]
-  SITE[uiucwangjiajun.com<br/>rta.js tracker] -->|sendBeacon /api/collect| ING
+  SITE[anushkadas-coder.github.io<br/>rta.js tracker] -->|sendBeacon /api/collect| ING
   CONN -->|POST /api/events| ING
   SIM[simulator / load tests] -->|POST /api/events| ING
   subgraph Pod["backend pod (N replicas, HPA 2-10)"]
@@ -76,16 +76,16 @@ Query benchmark detail (5,014,299 events, 258,919 rollup rows, mean of 5 warm ru
 - **Connector resume:** against a mock SSE server that dropped the connection every 70 events, the connector resumed at offsets 70 and 140 with no gaps and no duplicates (200/200 delivered).
 - **Tracker:** headless-browser visitors arriving from `linkedin.com/feed`, `lnkd.in`, `github.com`, `google.com` and `?utm_source=handshake` were all attributed correctly. GitHub, resume, email and project clicks were classified correctly, and `engaged` fired after 30 s. Automated browsers and bot user agents are dropped, as intended.
 
-## Put the tracker on uiucwangjiajun.com
+## Put the tracker on anushkadas-coder.github.io
 
 1. Deploy the backend somewhere with **HTTPS** (your site is HTTPS, so beacons to plain HTTP are blocked as mixed content). Any of: the k8s manifests, `docker compose` on a small VM behind Caddy, or Render / Fly.io / Railway.
-2. Make sure `COLLECT_ORIGINS` includes `https://uiucwangjiajun.com` (it does by default).
+2. Make sure `COLLECT_ORIGINS` includes `https://anushkadas-coder.github.io` (it does by default).
 3. Add one line before `</body>` (or in your layout component):
    ```html
    <script defer src="https://YOUR-DASHBOARD-HOST/rta.js"
            data-endpoint="https://YOUR-DASHBOARD-HOST/api/collect"></script>
    ```
-4. Tag the links in your LinkedIn posts, for example `https://uiucwangjiajun.com/?utm_source=linkedin&utm_campaign=github-post`. LinkedIn often strips the referrer, so the UTM tag makes attribution reliable.
+4. Tag the links in your LinkedIn posts, for example `https://anushkadas-coder.github.io/?utm_source=linkedin&utm_campaign=github-post`. LinkedIn often strips the referrer, so the UTM tag makes attribution reliable.
 
 ## Run it
 
@@ -135,10 +135,10 @@ docker compose up --scale backend=3                        # watch cross-pod fan
 
 ### Kubernetes (minikube / kind / EKS)
 ```bash
-docker build -f backend/Dockerfile -t ghcr.io/jiajunwang23/rta-backend:latest .
-docker build -t ghcr.io/jiajunwang23/rta-frontend:latest frontend
-docker build -t ghcr.io/jiajunwang23/rta-wikipedia-connector:latest connectors
-# push all three, (k8s/ already points at ghcr.io/jiajunwang23)
+docker build -f backend/Dockerfile -t ghcr.io/anushkadas-coder/rta-backend:latest .
+docker build -t ghcr.io/anushkadas-coder/rta-frontend:latest frontend
+docker build -t ghcr.io/anushkadas-coder/rta-wikipedia-connector:latest connectors
+# push all three, (k8s/ already points at ghcr.io/anushkadas-coder)
 kubectl apply -f k8s/
 kubectl -n analytics get hpa -w                            # needs metrics-server
 ```

@@ -63,7 +63,7 @@ export REDIS_URL="redis://localhost:6379/0"
 
 # ---------- Run ----------
 export WEB_CONCURRENCY=2 PORT=$BACKEND_PORT BACKEND_URL="http://localhost:$BACKEND_PORT"
-export COLLECT_ORIGINS="http://localhost:$BACKEND_PORT,https://uiucwangjiajun.com,https://www.uiucwangjiajun.com"
+export COLLECT_ORIGINS="http://localhost:$BACKEND_PORT,https://anushkadas-coder.github.io"
 cleanup() { say "Stopping dashboard (Postgres and Redis keep running; see README to stop them)"; kill $(jobs -p) 2>/dev/null; exit 0; }
 trap cleanup INT TERM HUP
 
