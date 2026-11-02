@@ -5,7 +5,7 @@ import { transport, useLiveStream } from "./useLiveStream";
 import "./App.css";
 
 const REPO = "https://github.com/JiajunWang23/realtime-analytics-dashboard";
-const AUTHOR_SITE = "https://uiucwangjiajun.com";
+const AUTHOR_SITE = "https://anushka.pages.dev";
 const SOURCE = "wikipedia";
 const fmt = (n) => (n == null ? "—" : Intl.NumberFormat("en-US").format(n));
 const pct = (n) => (n == null ? "—" : `${Math.round(n * 100)}`);
@@ -125,7 +125,7 @@ export default function App() {
   return (
     <div className="viz-root">
       <header className="hero">
-        <p className="eyebrow">Portfolio project by <a href={AUTHOR_SITE}>Jiajun Wang</a></p>
+        <p className="eyebrow">Portfolio project by <a href={AUTHOR_SITE}>Anushka Das</a></p>
         <h1>Real-Time Analytics Dashboard</h1>
         <p className="lede">
           A live data pipeline you can watch working. Events stream in from the outside world, get stored and
@@ -228,7 +228,7 @@ export default function App() {
       </section>
 
       <footer>
-        Built by <a href={AUTHOR_SITE}>Jiajun Wang</a> · <a href={REPO} target="_blank" rel="noreferrer">Source on GitHub</a>
+        Built by <a href={AUTHOR_SITE}>Anushka</a> · <a href={REPO} target="_blank" rel="noreferrer">Source on GitHub</a>
       </footer>
     </div>
   );
