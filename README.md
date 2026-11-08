@@ -1,6 +1,6 @@
 # Real-Time Analytics Dashboard
 
-A real-time analytics platform that ingests a **live event stream**, stores it in PostgreSQL, fans it out through Redis pub/sub, and shows it on a React dashboard that updates within about a second.
+⭐ A real-time analytics platform that ingests a **live event stream**, stores it in PostgreSQL, fans it out through Redis pub/sub, and shows it on a React dashboard that updates within about a second.
 
 **Live demo:** https://realtime-analytics-dashboard-lime.vercel.app
 **Author:** [Anushka](https://anushkadas-coder.github.io) · [GitHub](https://github.com/anushkadas-coder) · anushkadas05das@gmail.com
